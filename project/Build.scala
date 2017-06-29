@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 import play.sbt.routes.RoutesKeys.routesGenerator
-import play.routes.compiler.StaticRoutesGenerator
+import play.routes.compiler.{InjectedRoutesGenerator, StaticRoutesGenerator}
 
 object StackableControllerProjects extends Build {
 
@@ -73,14 +73,15 @@ object StackableControllerProjects extends Build {
     version := _version,
     scalaVersion := Scala211,
     resolvers ++= _resolvers,
-    routesGenerator := StaticRoutesGenerator,
+    routesGenerator := InjectedRoutesGenerator,
     libraryDependencies ++= Seq(
       play.sbt.Play.autoImport.jdbc,
+      play.sbt.Play.autoImport.guice,
       play.sbt.Play.autoImport.specs2 % "test",
       "com.typesafe.play"  %% "play"                         % play.core.PlayVersion.current,
-      "org.scalikejdbc"    %% "scalikejdbc"                  % "2.3.5",
-      "org.scalikejdbc"    %% "scalikejdbc-config"           % "2.3.5",
-      "org.scalikejdbc"    %% "scalikejdbc-play-initializer" % "2.5.0",
+      "org.scalikejdbc"    %% "scalikejdbc"                  % "3.0.0",
+      "org.scalikejdbc"    %% "scalikejdbc-config"           % "3.0.0",
+      "org.scalikejdbc"    %% "scalikejdbc-play-initializer" % "2.6.0",
       "org.slf4j"          %  "slf4j-simple"                 % "[1.7,)"
     )
   ) dependsOn(core)

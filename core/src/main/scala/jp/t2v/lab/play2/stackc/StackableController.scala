@@ -9,8 +9,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 import scala.util.control.{ControlThrowable, NonFatal}
 
+@Inject
 trait StackableController {
-    self: Controller =>
+    self: AbstractController =>
 
   final class StackActionBuilder[B](override val parser: BodyParser[B], params: Attribute[_]*) extends ActionBuilder[RequestWithAttributes, B] {
     def invokeBlock[A](req: Request[A], block: (RequestWithAttributes[A]) => Future[Result]): Future[Result] = {
@@ -22,10 +23,10 @@ trait StackableController {
         case NonFatal(e) => cleanupOnFailed(request, e); throw e
       }
     }
-    override protected def executionContext: ExecutionContext = play.api.libs.concurrent.Execution.defaultContext
+    override protected def executionContext: ExecutionContext = self.controllerComponents.executionContext
   }
 
-  val defaultBodyParser = self.parse.default
+  private lazy val defaultBodyParser = self.controllerComponents.parsers.default
 
   final def AsyncStack[A](p: BodyParser[A], params: Attribute[_]*)(f: RequestWithAttributes[A] => Future[Result]): Action[A] = new StackActionBuilder(p, params: _*).async(p)(f)
   final def AsyncStack(params: Attribute[_]*)(f: RequestWithAttributes[AnyContent] => Future[Result]): Action[AnyContent] = new StackActionBuilder[AnyContent](defaultBodyParser, params: _*).async(f)
