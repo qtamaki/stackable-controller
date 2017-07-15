@@ -7,7 +7,7 @@ object StackableControllerProjects extends Build {
 
   lazy val _organization = "jp.t2v"
 
-  lazy val _version = "0.6.0-SNAPSHOT"
+  lazy val _version = "0.7.0-SNAPSHOT"
 
   def _publishTo(v: String) = {
     val nexus = "https://oss.sonatype.org/"
@@ -44,7 +44,7 @@ object StackableControllerProjects extends Build {
     </developers>
   }
 
-  val Scala211 = "2.11.7"
+  val Scala211 = "2.11.11"
 
   lazy val core = Project(
     id = "core", 
@@ -54,7 +54,7 @@ object StackableControllerProjects extends Build {
     name := "stackable-controller",
     version := _version,
     scalaVersion := Scala211,
-    crossScalaVersions := Scala211 :: Nil,
+    crossScalaVersions := Seq(Scala211, "2.12.2"),
     publishTo <<= version { (v: String) => _publishTo(v) },
     publishMavenStyle := true,
     resolvers ++= _resolvers,
@@ -78,9 +78,9 @@ object StackableControllerProjects extends Build {
       play.sbt.Play.autoImport.jdbc,
       play.sbt.Play.autoImport.specs2 % "test",
       "com.typesafe.play"  %% "play"                         % play.core.PlayVersion.current,
-      "org.scalikejdbc"    %% "scalikejdbc"                  % "2.3.5",
-      "org.scalikejdbc"    %% "scalikejdbc-config"           % "2.3.5",
-      "org.scalikejdbc"    %% "scalikejdbc-play-initializer" % "2.5.0",
+      "org.scalikejdbc"    %% "scalikejdbc"                  % "3.0.0",
+      "org.scalikejdbc"    %% "scalikejdbc-config"           % "3.0.0",
+      "org.scalikejdbc"    %% "scalikejdbc-play-initializer" % "2.6.0",
       "org.slf4j"          %  "slf4j-simple"                 % "[1.7,)"
     )
   ) dependsOn(core)
